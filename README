@@ -1,0 +1,5 @@
+Right now works in php 5 from command line
+Some commands require terminus
+
+useage:
+php index.php ssh "[ssh command]" [ssh user] [ssh url]
