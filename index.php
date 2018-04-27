@@ -2,8 +2,7 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-// todo run terminus connection:info site.env on all sites
-//connection:info
+use Symfony\Component\Yaml\Yaml;
 
 // Determine if script is run from the command line
 $isCommandLine = false;
@@ -34,40 +33,22 @@ if($isCommandLine){
 		
 		$pantheonWrapper = new PantheonWrapper($argv[3],$argv[4]);
 		$commandResponse = $pantheonWrapper->sshCommand($argv[2]);
-		// define ssh credentials and command
-		//$sshUser = $argv[3];
-		//$sshUrl = $argv[4];
-		//$command = 'drush ups';
-		//$remoteCommand = $argv[2];
-		// run ssh command
-		//$fullCommand = 'ssh -T '.$sshUser.'@'.$sshUrl.' -p 2222 -o "AddressFamily inet" '.$remoteCommand;
-		//exec($fullCommand,$commandResponse);
 
 		print_r($commandResponse);
 	}
 	// List command
 	elseif($command == 'list'){
 		
-		// Get list
-		$fullCommand = 'terminus site:list';
-		exec($fullCommand,$commandResponse);
-		
-		// Parse list
-		$sites = array();
-		for($i=3; $i<count($commandResponse); $i++){
-			$siteInfo = explode(' ',$commandResponse[$i]);
-			//trim up the info
-			foreach($siteInfo as $columnIndex => $info){
-				$siteInfo[$columnIndex] = trim($info);
-			}
-			$sites[] = $siteInfo;
-		}
+		$pantheonWrapper = new PantheonWrapper();
+		$sites = $pantheonWrapper->getSites();
 		
 		print_r($sites);
 	}
 
 	
 	
+}else{
+	print 'This is a command line utility intended to be run with the php command.';
 }
 
 ?>
