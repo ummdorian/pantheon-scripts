@@ -27,15 +27,15 @@ if($isCommandLine){
 
 	// Help command
 	if($command == 'help'){
-		print 'php index.php ssh "[ssh command]" [ssh user] [ssh url]'."\n";
+		print 'php index.php ssh [site id] "[ssh command]"'."\n";
 		print 'php index.php list'."\n";
 		print 'php index.php updates [dashboard password]'."\n";
 	}
 	// SSH command 
 	elseif($command == 'ssh'){
 		
-		$pantheonWrapper = new PantheonWrapper($argv[3],$argv[4]);
-		$commandResponse = $pantheonWrapper->sshCommand($argv[2]);
+		$pantheonWrapper = new PantheonWrapper();
+		$commandResponse = $pantheonWrapper->sshCommand($argv[2],$argv[3]);
 
 		print_r($commandResponse);
 	}

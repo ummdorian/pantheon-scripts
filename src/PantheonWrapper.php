@@ -11,16 +11,16 @@ class PantheonWrapper{
 	
 	
 	
-	public function __construct($sshUser = '', $sshUrl = ''){
-		$this->sshUser = $sshUser;
-		$this->sshUrl = $sshUrl;
+	public function __construct(){
 	}
 	
-	
-	public function sshCommand($command){
+
+	public function sshCommand($siteID, $command){
 
 		// create ssh command
-		$command = '.\bin\ssh.exe -T '.$this->sshUser.'@'.$this->sshUrl.' -p 2222 -o "AddressFamily inet" '.$command;
+		$sshUser = 'dev.'.$siteID;
+		$sshUrl =  'appserver.dev.'.$siteID.'.drush.in';
+		$command = '.\bin\ssh.exe -T '.$sshUser.'@'.$sshUrl.' -p 2222 -o "AddressFamily inet" '.$command;
 		
 		// run ssh command
 		exec($command,$commandResponse);
@@ -29,7 +29,6 @@ class PantheonWrapper{
 		return $commandResponse;
 		
 	}
-	
 	
 	public function getSites(){
 		
@@ -62,7 +61,7 @@ class PantheonWrapper{
 			$commandResponse = '';
 			// run ssh command
 			exec($command,$commandResponse);
-			
+			// add response to repo
 			if(count($commandResponse)){
 				$securityUpdates[$siteInfo->name] = $commandResponse;
 			}
