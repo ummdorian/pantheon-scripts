@@ -20,13 +20,16 @@ if($isCommandLine){
 		'--help' => 'help',
 		'ssh' => 'ssh',
 		'list' => 'list',
+		'updates' => 'updates',
 	);
 	// Decide which command we're running
 	$command = $commandMapping[$argv[1]];
 
 	// Help command
 	if($command == 'help'){
-		print 'Useage: php index.php ssh "[ssh command]" [ssh user] [ssh url]';
+		print 'php index.php ssh "[ssh command]" [ssh user] [ssh url]'."\n";
+		print 'php index.php list'."\n";
+		print 'php index.php updates [password]'."\n";
 	}
 	// SSH command 
 	elseif($command == 'ssh'){
@@ -43,6 +46,14 @@ if($isCommandLine){
 		$sites = $pantheonWrapper->getSites();
 		
 		print_r($sites);
+	}
+	// Get Updates
+	elseif($command == 'updates'){
+		
+		$pantheonWrapper = new PantheonWrapper();
+		$updates = $pantheonWrapper->getUpdates($argv[2]);
+		
+		print_r($updates);
 	}
 
 	

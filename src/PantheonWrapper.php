@@ -20,7 +20,7 @@ class PantheonWrapper{
 	public function sshCommand($command){
 
 		// create ssh command
-		$command = 'ssh -T '.$this->sshUser.'@'.$this->sshUrl.' -p 2222 -o "AddressFamily inet" '.$command;
+		$command = '.\bin\ssh.exe -T '.$this->sshUser.'@'.$this->sshUrl.' -p 2222 -o "AddressFamily inet" '.$command;
 		
 		// run ssh command
 		exec($command,$commandResponse);
@@ -34,8 +34,8 @@ class PantheonWrapper{
 	public function getSites(){
 		
 		// Get site machine names
-		$fullCommand = 'terminus site:list --format=json';
-		exec($fullCommand,$commandResponse);
+		$command = 'terminus site:list --format=json';
+		exec($command,$commandResponse);
 		// Turn response into array
 		$sitesJson = implode($commandResponse,"\n");
 		$sites = json_decode($sitesJson);
@@ -45,15 +45,30 @@ class PantheonWrapper{
 	}
 	
 	
-	public function getUpdates(){
+	public function getUpdates($password){
 		
 		// get sites
 		$sites = $this->getSites();
 		
 		//loop over sites
-		foreach($sites as $site){
+		$securityUpdates = array();
+		foreach($sites as $siteKey => $siteInfo){
+			
+			$sshUser = 'dev.'.$siteKey;
+			$sshUrl =  'appserver.dev.'.$siteKey.'.drush.in';
+			
+			$command = 'echo y|.\bin\plink.exe -P 2222 -pw "'.$password.'" '.$sshUser.'@'.$sshUrl.'  "drush ups --security-only --format=list"';
+			// $commandResponse doesn't get overwritten
+			$commandResponse = '';
+			// run ssh command
+			exec($command,$commandResponse);
+			
+			if(count($commandResponse)){
+				$securityUpdates[$siteInfo->name] = $commandResponse;
+			}
 			
 		}
+		return $securityUpdates;
 		
 	}
 	

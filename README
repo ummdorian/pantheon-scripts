@@ -1,5 +1,6 @@
 Right now works in php 5 from command line
 Some commands require terminus
+Some commands require windows 64bit
 
 useage:
 php index.php ssh "[ssh command]" [ssh user] [ssh url]
