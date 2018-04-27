@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/vendor/autoload.php';
+
 // todo run terminus connection:info site.env on all sites
 //connection:info
 
@@ -29,14 +31,17 @@ if($isCommandLine){
 	}
 	// SSH command 
 	elseif($command == 'ssh'){
+		
+		$pantheonWrapper = new PantheonWrapper($argv[3],$argv[4]);
+		$commandResponse = $pantheonWrapper->sshCommand($argv[2]);
 		// define ssh credentials and command
-		$sshUser = $argv[3];
-		$sshUrl = $argv[4];
+		//$sshUser = $argv[3];
+		//$sshUrl = $argv[4];
 		//$command = 'drush ups';
-		$remoteCommand = $argv[2];
+		//$remoteCommand = $argv[2];
 		// run ssh command
-		$fullCommand = 'ssh -T '.$sshUser.'@'.$sshUrl.' -p 2222 -o "AddressFamily inet" '.$remoteCommand;
-		exec($fullCommand,$commandResponse);
+		//$fullCommand = 'ssh -T '.$sshUser.'@'.$sshUrl.' -p 2222 -o "AddressFamily inet" '.$remoteCommand;
+		//exec($fullCommand,$commandResponse);
 
 		print_r($commandResponse);
 	}
