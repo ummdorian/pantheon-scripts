@@ -29,7 +29,7 @@ if($isCommandLine){
 	if($command == 'help'){
 		print 'php index.php ssh "[ssh command]" [ssh user] [ssh url]'."\n";
 		print 'php index.php list'."\n";
-		print 'php index.php updates [password]'."\n";
+		print 'php index.php updates [dashboard password]'."\n";
 	}
 	// SSH command 
 	elseif($command == 'ssh'){

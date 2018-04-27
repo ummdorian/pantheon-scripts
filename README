@@ -1,6 +1,8 @@
 Right now works in php 5 from command line
 Some commands require terminus
-Some commands require windows 64bit
+Some commands require windows 64bit unless you swap out exe's in bin folder
 
 useage:
 php index.php ssh "[ssh command]" [ssh user] [ssh url]
+php index.php list
+php index.php updates [dashboard password]
