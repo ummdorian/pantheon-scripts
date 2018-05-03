@@ -1,5 +1,8 @@
 <?php
 
+//@todo use pscp to store fingerprint for all ssh endpoints before commands are run
+//@todo figure out why drush fails sometimes
+
 class PantheonWrapper{
 
 	// ssh info
@@ -50,7 +53,7 @@ class PantheonWrapper{
 		$sites = $this->getSites();
 		
 		//loop over sites
-		$securityUpdates = array();
+		$results = array();
 		foreach($sites as $siteKey => $siteInfo){
 			
 			$sshUser = 'dev.'.$siteKey;
@@ -61,14 +64,59 @@ class PantheonWrapper{
 			$commandResponse = '';
 			// run ssh command
 			exec($command,$commandResponse);
-			// add response to repo
+			// add site to response
 			if(count($commandResponse)){
-				$securityUpdates[$siteInfo->name] = $commandResponse;
+				$results[$siteInfo->name] = $commandResponse;
 			}
 			
 		}
-		return $securityUpdates;
+		return $results;
 		
 	}
+
+	function getSitesWithModule($moduleName,$password){
+	    // get sites
+		$sites = $this->getSites();
+
+		//loop over sites
+		$results = array();
+		foreach($sites as $siteKey => $siteInfo){
+
+			$sshUser = 'live.'.$siteKey;
+			$sshUrl =  'appserver.live.'.$siteKey.'.drush.in';
+
+			$command = 'echo y|.\bin\plink.exe -P 2222 -pw "'.$password.'" '.$sshUser.'@'.$sshUrl.'  "drush pm-info '.$moduleName.' --format=json"';
+			// $commandResponse doesn't get overwritten
+			$commandResponse = '';
+			// run ssh command
+			exec($command,$commandResponse);
+
+			// add site to response
+			if(
+			    count($commandResponse)
+			    && $commandResponse[0] !=  $moduleName.' was not found.'
+			){
+			    $info = json_decode(implode($commandResponse,"\n"));
+			    if(
+			        isset($info->$moduleName)
+			        && isset($info->$moduleName->version)
+			    ){
+				    $results[$siteInfo->name] = $info->$moduleName->version.' ('.$info->$moduleName->status.')';
+                }
+		    }
+
+		    // if there was no response, or response was malformed add site to unknown status array
+		    if(
+		        !count($commandResponse)
+		        || (
+		            $commandResponse[0] !=  $moduleName.' was not found.'
+		            && !isset($info->$moduleName)
+                )
+		    ){
+		        $results['_ unable to check _'][] = $siteInfo->name;
+            }
+        }
+        return $results;
+    }
 	
 }

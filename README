@@ -3,6 +3,7 @@ Some commands require terminus
 Some commands require windows 64bit unless you swap out exe's in bin folder
 
 useage:
-RUN SSH COMMAND:       php index.php ssh [site id] "[ssh command]"
-LIST SITES:            php index.php list
-SHOW SECURITY UPDATES: php index.php updates [dashboard password]
+RUN SSH COMMAND:           php index.php ssh [site id] "[ssh command]"
+LIST SITES:                php index.php list
+SHOW SECURITY UPDATES:     php index.php updates [dashboard password]
+FIND SITES WITH A MODULE:  php index.php module_search [module machine name] [dashboard password]

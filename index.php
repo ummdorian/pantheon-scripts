@@ -21,6 +21,10 @@ if($isCommandLine){
 		'ssh' => 'ssh',
 		'list' => 'list',
 		'updates' => 'updates',
+		'mod' => 'module',
+		'module' => 'module',
+		'mod_search' => 'module',
+		'module_search' => 'module',
 	);
 	// Decide which command we're running
 	$command = $commandMapping[$argv[1]];
@@ -30,6 +34,7 @@ if($isCommandLine){
 		print 'php index.php ssh [site id] "[ssh command]"'."\n";
 		print 'php index.php list'."\n";
 		print 'php index.php updates [dashboard password]'."\n";
+		print 'php index.php module_search [module machine name] [dashboard password]'."\n";
 	}
 	// SSH command 
 	elseif($command == 'ssh'){
@@ -51,11 +56,18 @@ if($isCommandLine){
 	elseif($command == 'updates'){
 		
 		$pantheonWrapper = new PantheonWrapper();
-		$updates = $pantheonWrapper->getUpdates($argv[2]);
+		$results = $pantheonWrapper->getUpdates($argv[2]);
 		
-		print_r($updates);
+		print_r($results);
 	}
+    // Module Search
+    elseif($command == 'module'){
 
+		$pantheonWrapper = new PantheonWrapper();
+		$results = $pantheonWrapper->getSitesWithModule($argv[2],$argv[3]);
+
+		print_r($results);
+	}
 	
 	
 }else{
